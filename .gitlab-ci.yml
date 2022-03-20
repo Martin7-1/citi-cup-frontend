@@ -1,0 +1,37 @@
+image: node:14
+
+
+stages:
+- build
+- deliver
+- publish
+
+
+cache:
+    paths:
+        - node_modules/
+
+build:
+    stage: build
+    script:
+        - npm install --registry=https://repo.nju.edu.cn/repository/npm/
+        - ./node_modules/.bin/vue-cli-service build
+    artifacts:
+        paths:
+        - dist/
+
+deliver:
+    image: docker
+    stage: deliver
+    script:
+        - docker build -t citi-cup-fontend:$CI_PIPELINE_ID .
+
+publish:
+    image: docker
+    stage: publish
+    script:
+        - docker container rm -f citi-cup-fontend || true
+        - docker run -d -p 3000:3000 --name citi-cup-fontend citi-cup-fontend:$CI_PIPELINE_ID
+
+
+
