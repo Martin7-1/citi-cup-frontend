@@ -22,6 +22,7 @@
     >
     </div>
     <Button v-show="!isRecording" text="开始" @click="recorderStart"></Button>
+    <Button v-show="isRecording" text="结束" @click="recorderStop"></Button>
 
     <!--    <Button text="提交" @click="submit"></Button>-->
   </div>
